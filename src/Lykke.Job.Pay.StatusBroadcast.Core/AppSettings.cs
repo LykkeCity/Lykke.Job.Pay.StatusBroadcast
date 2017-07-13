@@ -8,6 +8,8 @@
         public class StatusBroadcastSettings
         {
             public DbSettings Db { get; set; }
+            public string LykkePayBaseUrl { get; set; }
+            public int TransactionConfirmation { get; set; }
         }
 
         public class DbSettings

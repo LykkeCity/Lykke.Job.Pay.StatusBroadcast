@@ -10,6 +10,7 @@
     <PackageReference Include="Lykke.Common" Version="1.1.79" />
     <PackageReference Include="Lykke.Common.Entities" Version="1.0.26" />
     <PackageReference Include="Lykke.Core" Version="1.0.67" />
+    <PackageReference Include="Lykke.Pay.Common" Version="1.0.3" />
     <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.9" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.9" />
     <PackageReference Include="Lykke.Pay.Service.Wallets.Client" Version="1.0.5" />

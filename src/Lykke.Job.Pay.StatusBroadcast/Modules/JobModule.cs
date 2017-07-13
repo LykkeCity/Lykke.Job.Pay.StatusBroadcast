@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Bitcoint.Api.Client;
@@ -49,7 +50,24 @@ namespace Lykke.Job.Pay.StatusBroadcast.Modules
             new MerchantPayRequestRepository(
                 new AzureTableStorage<MerchantPayRequest>(_settings.Db.MerchantPayRequestConnectionString, "MerchantPayRequest", null));
 
-           
+            builder.RegisterInstance(merchantPayRequestRepository)
+                .As<IMerchantPayRequestRepository>()
+                .SingleInstance();
+
+            var bitcoinAggRepository = new BitcoinAggRepository(
+                new AzureTableStorage<BitcoinAggEntity>(
+                    _settings.Db.MerchantPayRequestConnectionString, "BitcoinAgg",
+                    null),
+                new AzureTableStorage<BitcoinHeightEntity>(
+                    _settings.Db.MerchantPayRequestConnectionString, "BitcoinHeight",
+                    null));
+            builder.RegisterInstance(bitcoinAggRepository)
+                .As<IBitcoinAggRepository>()
+                .SingleInstance();
+
+            builder.RegisterType<HttpClient>()
+                .SingleInstance();
+
             builder.RegisterType<StatusProcessor>()
                 .As<IStatusProcessor>()
                 .SingleInstance();
