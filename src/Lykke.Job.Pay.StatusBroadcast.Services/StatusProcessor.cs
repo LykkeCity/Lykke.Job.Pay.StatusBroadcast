@@ -48,7 +48,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                                 Currency = r.AssetId,
                                 NumberOfConfirmation = await GetNumberOfConfirmation(r.DestinationAddress, r.TransactionId),
                                 TimeStamp = DateTime.UtcNow.Ticks,
-                                Url = $"{_settings.LykkePayBaseUrl}/transaction/{r.TransactionId}"
+                                Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                             }
                         }
                     ));
