@@ -3,7 +3,8 @@ using System.Net;
 using Lykke.Job.Pay.StatusBroadcast.Core.Services;
 using Lykke.Job.Pay.StatusBroadcast.Models;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.SwaggerGen.Annotations;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 
 namespace Lykke.Job.Pay.StatusBroadcast.Controllers
 {
