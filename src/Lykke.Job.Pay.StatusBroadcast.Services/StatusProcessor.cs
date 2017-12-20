@@ -120,7 +120,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                             {
                                 TransactionId = r.TransactionId,
                                 Currency = r.AssetId,
-                                NumberOfConfirmation = await GetNumberOfConfirmation(r.SuccessUrl, r.TransactionId),
+                                NumberOfConfirmation = await GetNumberOfConfirmation(r.SourceAddress, r.TransactionId),
                                 TimeStamp = DateTime.UtcNow.Ticks,
                                 Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                             }
