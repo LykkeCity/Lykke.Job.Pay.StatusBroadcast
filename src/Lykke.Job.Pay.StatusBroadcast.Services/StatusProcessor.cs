@@ -113,9 +113,9 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                     MerchantPayRequestNotification.Success &&
                     !string.IsNullOrEmpty(r.SuccessUrl))
                 {
-                    await PostInfo(r.SuccessUrl, JsonConvert.SerializeObject(new TransferSuccessReturn
+                    await PostInfo(r.SuccessUrl, JsonConvert.SerializeObject(new PaymentSuccessReturn
                         {
-                            TransferResponse = new TransferSuccessResponse
+                            PaymentResponse = new PaymentSuccessResponse
                             {
                                 TransactionId = r.TransactionId,
                                 Currency = r.AssetId,
@@ -133,9 +133,9 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                     MerchantPayRequestNotification.InProgress &&
                     !string.IsNullOrEmpty(r.ProgressUrl))
                 {
-                    await PostInfo(r.ProgressUrl, JsonConvert.SerializeObject(new TransferInProgressReturn
+                    await PostInfo(r.ProgressUrl, JsonConvert.SerializeObject(new PaymentInProgressReturn
                     {
-                        TransferResponse = new TransferInProgressResponse
+                        PaymentResponse = new PaymentInProgressResponse
                         {
                             Settlement = Settlement.TRANSACTION_DETECTED,
                             TimeStamp = DateTime.UtcNow.Ticks,
@@ -152,11 +152,11 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                     !string.IsNullOrEmpty(r.ErrorUrl))
                 {
                     await PostInfo(r.ErrorUrl, JsonConvert.SerializeObject(
-                        new TransferErrorReturn
+                        new PaymentErrorReturn
                         {
-                            TransferResponse = new TransferErrorResponse
+                            PaymentResponse = new PaymentErrorResponse
                             {
-                                TransferError = TransferError.INTERNAL_ERROR,
+                                PaymentError = TransferError.INTERNAL_ERROR,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
                         }));
@@ -193,7 +193,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
         {
             try
             {
-                await _httpClient.PostAsync(url, new StringContent(serializeObject));
+                var result=  await _httpClient.PostAsync(url, new StringContent(serializeObject));
             }
             catch (Exception ex)
             {
