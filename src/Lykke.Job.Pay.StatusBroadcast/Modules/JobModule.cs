@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Bitcoint.Api.Client;
@@ -72,9 +73,10 @@ namespace Lykke.Job.Pay.StatusBroadcast.Modules
             builder.RegisterInstance(merchantOrderRequestRepository)
                 .As<IMerchantOrderRequestRepository>()
                 .SingleInstance();
-
-            builder.RegisterType<HttpClient>()
-                .SingleInstance();
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            builder.RegisterInstance(client).SingleInstance();
 
             builder.RegisterType<StatusProcessor>()
                 .As<IStatusProcessor>()

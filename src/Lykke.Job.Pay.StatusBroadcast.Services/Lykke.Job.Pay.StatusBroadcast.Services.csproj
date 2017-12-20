@@ -10,10 +10,10 @@
     <PackageReference Include="Lykke.Common" Version="3.0.2" />
     <PackageReference Include="Lykke.Contracts" Version="1.0.40" />
     <PackageReference Include="Lykke.Core" Version="1.0.102" />
-    <PackageReference Include="Lykke.Pay.Common" Version="1.0.63" />
+    <PackageReference Include="Lykke.Pay.Common" Version="1.0.64" />
     <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.17" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.23" />
-    <PackageReference Include="Lykke.Pay.Service.Wallets.Client" Version="1.0.11" />
+    <PackageReference Include="Lykke.Pay.Service.Wallets.Client" Version="1.0.12" />
     <PackageReference Include="Lykke.RabbitMqBroker" Version="4.3.0" />
     <PackageReference Include="NBitcoin" Version="4.0.0.50" />
   </ItemGroup>
