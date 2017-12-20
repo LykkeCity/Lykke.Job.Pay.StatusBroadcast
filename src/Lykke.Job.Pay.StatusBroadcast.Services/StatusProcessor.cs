@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Core;
@@ -193,7 +194,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
         {
             try
             {
-                var result=  await _httpClient.PostAsync(url, new StringContent(serializeObject));
+                var result=  await _httpClient.PostAsync(url, new StringContent(serializeObject, Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {

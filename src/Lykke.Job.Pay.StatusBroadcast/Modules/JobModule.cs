@@ -74,8 +74,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Modules
                 .As<IMerchantOrderRequestRepository>()
                 .SingleInstance();
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept
-                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+           
             builder.RegisterInstance(client).SingleInstance();
 
             builder.RegisterType<StatusProcessor>()
