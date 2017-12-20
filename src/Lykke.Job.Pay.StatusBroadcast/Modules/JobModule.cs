@@ -65,6 +65,14 @@ namespace Lykke.Job.Pay.StatusBroadcast.Modules
                 .As<IBitcoinAggRepository>()
                 .SingleInstance();
 
+            var merchantOrderRequestRepository =
+                new MerchantOrderRequestRepository(
+                    new AzureTableStorage<MerchantOrderRequest>(_settings.Db.MerchantPayRequestConnectionString, "MerchantOrderRequest", null));
+
+            builder.RegisterInstance(merchantOrderRequestRepository)
+                .As<IMerchantOrderRequestRepository>()
+                .SingleInstance();
+
             builder.RegisterType<HttpClient>()
                 .SingleInstance();
 

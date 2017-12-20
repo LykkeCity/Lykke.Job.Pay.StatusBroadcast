@@ -105,6 +105,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
         {
             var orders = await _merchantOrderRepo.GetAllAsync();
 
+
             foreach (var r in orders)
             {
                 bool needSave = false;
