@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lykke.Common" Version="3.0.2" />
+    <PackageReference Include="Lykke.Common" Version="3.1.0" />
     <PackageReference Include="Lykke.Contracts" Version="1.0.40" />
   </ItemGroup>
 

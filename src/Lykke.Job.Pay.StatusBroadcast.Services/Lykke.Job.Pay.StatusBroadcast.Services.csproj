@@ -6,11 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Bitcoint.Api.Client" Version="1.0.5" />
-    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.102" />
-    <PackageReference Include="Lykke.Common" Version="3.0.2" />
+    <PackageReference Include="Lykke.AzureRepositories" Version="1.0.103" />
+    <PackageReference Include="Lykke.Common" Version="3.1.0" />
     <PackageReference Include="Lykke.Contracts" Version="1.0.40" />
-    <PackageReference Include="Lykke.Core" Version="1.0.102" />
-    <PackageReference Include="Lykke.Pay.Common" Version="1.0.65" />
+    <PackageReference Include="Lykke.Core" Version="1.0.103" />
+    <PackageReference Include="Lykke.Pay.Common" Version="1.0.73" />
     <PackageReference Include="Lykke.Pay.Service.GenerateAddress.Client" Version="1.0.17" />
     <PackageReference Include="Lykke.Pay.Service.StoreRequest.Client" Version="1.0.23" />
     <PackageReference Include="Lykke.Pay.Service.Wallets.Client" Version="1.0.12" />

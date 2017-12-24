@@ -2,12 +2,14 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 using Common.Log;
 using Lykke.Core;
 using Lykke.Job.Pay.StatusBroadcast.Core;
 using Lykke.Job.Pay.StatusBroadcast.Core.Services;
 using Lykke.Pay.Common;
 using Newtonsoft.Json;
+
 
 namespace Lykke.Job.Pay.StatusBroadcast.Services
 {
@@ -45,16 +47,16 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                     !string.IsNullOrEmpty(r.SuccessUrl))
                 {
                     await PostInfo(r.SuccessUrl, JsonConvert.SerializeObject(new TransferSuccessReturn
+                    {
+                        TransferResponse = new TransferSuccessResponse
                         {
-                            TransferResponse = new TransferSuccessResponse
-                            {
-                                TransactionId = r.TransactionId,
-                                Currency = r.AssetId,
-                                NumberOfConfirmation = await GetNumberOfConfirmation(r.DestinationAddress, r.TransactionId),
-                                TimeStamp = DateTime.UtcNow.Ticks,
-                                Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
-                            }
+                            TransactionId = r.TransactionId,
+                            Currency = r.AssetId,
+                            NumberOfConfirmation = await GetNumberOfConfirmation(r.DestinationAddress, r.TransactionId),
+                            TimeStamp = DateTime.UtcNow.Ticks,
+                            Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                         }
+                    }
                     ));
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.Success;
@@ -115,16 +117,16 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                     !string.IsNullOrEmpty(r.SuccessUrl))
                 {
                     await PostInfo(r.SuccessUrl, JsonConvert.SerializeObject(new PaymentSuccessReturn
+                    {
+                        PaymentResponse = new PaymentSuccessResponse
                         {
-                            PaymentResponse = new PaymentSuccessResponse
-                            {
-                                TransactionId = r.TransactionId,
-                                Currency = r.AssetId,
-                                NumberOfConfirmation = await GetNumberOfConfirmation(r.SourceAddress, r.TransactionId),
-                                TimeStamp = DateTime.UtcNow.Ticks,
-                                Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
-                            }
+                            TransactionId = r.TransactionId,
+                            Currency = r.AssetId,
+                            NumberOfConfirmation = await GetNumberOfConfirmation(r.SourceAddress, r.TransactionId),
+                            TimeStamp = DateTime.UtcNow.Ticks,
+                            Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                         }
+                    }
                     ));
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.Success;
@@ -152,12 +154,39 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                     MerchantPayRequestNotification.Error &&
                     !string.IsNullOrEmpty(r.ErrorUrl))
                 {
+                    var transferStatus = string.IsNullOrEmpty(r.TransactionStatus)
+                        ? InvoiceStatus.Unpaid
+                        : r.TransactionStatus.ParsePayEnum<InvoiceStatus>();
+                    PaymentError paymentError;
+                    switch (transferStatus)
+                    {
+                        case InvoiceStatus.Draft:
+                        case InvoiceStatus.InProgress:
+                        case InvoiceStatus.Paid:
+                        case InvoiceStatus.Removed:
+                            paymentError = PaymentError.TRANSACTION_NOT_DETECTED;
+                            break;
+                        case InvoiceStatus.LatePaid:
+                        case InvoiceStatus.Unpaid:
+                            paymentError = PaymentError.PAYMENT_EXPIRED;
+                            break;
+                        case InvoiceStatus.Overpaid:
+                            paymentError = PaymentError.AMOUNT_ABOVE;
+                            break;
+                        case InvoiceStatus.Underpaid:
+                            paymentError = PaymentError.AMOUNT_BELOW;
+                            break;
+                        default:
+                            paymentError = PaymentError.TRANSACTION_NOT_DETECTED;
+                            break;
+
+                    }
                     await PostInfo(r.ErrorUrl, JsonConvert.SerializeObject(
                         new PaymentErrorReturn
                         {
                             PaymentResponse = new PaymentErrorResponse
                             {
-                                PaymentError = TransferError.INTERNAL_ERROR,
+                                PaymentError = paymentError,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
                         }));
@@ -194,7 +223,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
         {
             try
             {
-                var result=  await _httpClient.PostAsync(url, new StringContent(serializeObject, Encoding.UTF8, "application/json"));
+                var result = await _httpClient.PostAsync(url, new StringContent(serializeObject, Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {
