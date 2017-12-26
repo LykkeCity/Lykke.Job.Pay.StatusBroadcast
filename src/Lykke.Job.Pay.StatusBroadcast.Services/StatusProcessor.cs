@@ -207,16 +207,17 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
             await ProcessOrders();
         }
 
-        private async Task<int> GetNumberOfConfirmation(string address, string transactionId)
+        private int GetNumberOfConfirmation(string address, string transactionId)
         {
-            var height = await _bitcoinRepo.GetNextBlockId();
-            var transaction = await _bitcoinRepo.GetWalletTransactionAsync(address, transactionId);
-            if (transaction == null)
-            {
-                return 0;
-            }
+            //var height = await _bitcoinRepo.GetNextBlockId();
+            //var transaction = await _bitcoinRepo.GetWalletTransactionAsync(address, transactionId);
+            //if (transaction == null)
+            //{
+            //    return 0;
+            //}
 
-            return height - transaction.BlockNumber + _settings.TransactionConfirmation;
+            //return height - transaction.BlockNumber + _settings.TransactionConfirmation;
+            return _settings.TransactionConfirmation;
         }
 
         private async Task PostInfo(string url, string serializeObject)

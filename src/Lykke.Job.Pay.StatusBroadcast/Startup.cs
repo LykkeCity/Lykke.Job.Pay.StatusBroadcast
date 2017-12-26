@@ -73,7 +73,7 @@ namespace Lykke.Job.Pay.StatusBroadcast
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseLykkeMiddleware("BitcoinTransactionAggregator", ex => new ErrorResponse { ErrorMessage = "Technical problem" });
+            app.UseLykkeMiddleware("Lykke Pay Status Broadcast", ex => new ErrorResponse { ErrorMessage = "Technical problem" });
 
             app.UseMvc();
 
