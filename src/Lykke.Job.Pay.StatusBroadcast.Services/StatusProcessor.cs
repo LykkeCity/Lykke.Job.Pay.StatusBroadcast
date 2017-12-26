@@ -52,7 +52,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                         {
                             TransactionId = r.TransactionId,
                             Currency = r.AssetId,
-                            NumberOfConfirmation = await GetNumberOfConfirmation(r.DestinationAddress, r.TransactionId),
+                            NumberOfConfirmation = GetNumberOfConfirmation(r.DestinationAddress, r.TransactionId),
                             TimeStamp = DateTime.UtcNow.Ticks,
                             Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                         }
@@ -122,7 +122,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                         {
                             TransactionId = r.TransactionId,
                             Currency = r.AssetId,
-                            NumberOfConfirmation = await GetNumberOfConfirmation(r.SourceAddress, r.TransactionId),
+                            NumberOfConfirmation = GetNumberOfConfirmation(r.SourceAddress, r.TransactionId),
                             TimeStamp = DateTime.UtcNow.Ticks,
                             Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                         }
