@@ -145,7 +145,7 @@ namespace Lykke.Job.Pay.StatusBroadcast
 
                 var persistenceManager = new LykkeLogToAzureStoragePersistenceManager(
 
-                    AzureTableStorage<LogEntity>.Create(dbLogConnectionStringManager, "BitcoinTransactionAggregatorLog", consoleLogger),
+                    AzureTableStorage<LogEntity>.Create(dbLogConnectionStringManager, "JobPayStatusBroadcastLog", consoleLogger),
 
                     consoleLogger);
 
