@@ -224,7 +224,18 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
         {
             try
             {
+                await _log.WriteInfoAsync(ComponentName, "Sending confirmation", JsonConvert.SerializeObject(new
+                {
+                    url,
+                    message = serializeObject
+                }));
                 var result = await _httpClient.PostAsync(url, new StringContent(serializeObject, Encoding.UTF8, "application/json"));
+                await _log.WriteInfoAsync(ComponentName, "Sending confirmation result", JsonConvert.SerializeObject(new
+                {
+                    url,
+                    result.StatusCode,
+                    body= await result.Content.ReadAsStringAsync()
+                }));
             }
             catch (Exception ex)
             {
