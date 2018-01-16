@@ -57,7 +57,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                             Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                         }
                     }
-                    ));
+                    ), BroadcastType.Transfer, BroadcastMessageType.Success);
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.Success;
                 }
@@ -75,7 +75,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                             Currency = r.AssetId,
                             TransactionId = r.TransactionId
                         }
-                    }));
+                    }), BroadcastType.Transfer, BroadcastMessageType.Process);
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.InProgress;
                 }
@@ -92,7 +92,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                                 TransferError = TransferError.INTERNAL_ERROR,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
-                        }));
+                        }), BroadcastType.Transfer, BroadcastMessageType.Error);
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.Error;
                 }
@@ -127,7 +127,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                             Url = $"{_settings.LykkePayBaseUrl}transaction/{r.TransactionId}"
                         }
                     }
-                    ));
+                    ), BroadcastType.Order, BroadcastMessageType.Success);
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.Success;
                 }
@@ -145,7 +145,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                             Currency = r.AssetId,
                             TransactionId = r.TransactionId
                         }
-                    }));
+                    }), BroadcastType.Order, BroadcastMessageType.Process);
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.InProgress;
                 }
@@ -189,7 +189,7 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
                                 PaymentError = paymentError,
                                 TimeStamp = DateTime.UtcNow.Ticks
                             }
-                        }));
+                        }), BroadcastType.Order, BroadcastMessageType.Error);
                     needSave = true;
                     r.MerchantPayRequestNotification &= ~MerchantPayRequestNotification.Error;
                 }
@@ -220,26 +220,29 @@ namespace Lykke.Job.Pay.StatusBroadcast.Services
             return _settings.TransactionConfirmation;
         }
 
-        private async Task PostInfo(string url, string serializeObject)
+        private async Task PostInfo(string url, string serializeObject, BroadcastType broadcastType, BroadcastMessageType broadcastMessageType)
         {
+            var context = $"{broadcastType} - {broadcastMessageType}";
             try
             {
-                await _log.WriteInfoAsync(ComponentName, "Sending confirmation", JsonConvert.SerializeObject(new
-                {
-                    url,
-                    message = serializeObject
-                }));
+                
                 var result = await _httpClient.PostAsync(url, new StringContent(serializeObject, Encoding.UTF8, "application/json"));
-                await _log.WriteInfoAsync(ComponentName, "Sending confirmation result", JsonConvert.SerializeObject(new
+                
+                await _log.WriteInfoAsync(ComponentName, context, JsonConvert.SerializeObject(new
                 {
                     url,
                     result.StatusCode,
-                    body= await result.Content.ReadAsStringAsync()
+                    reuqest = serializeObject,
+                    body = await result.Content.ReadAsStringAsync()
                 }));
             }
             catch (Exception ex)
             {
-                await _log.WriteErrorAsync(ComponentName, "Sending confirmation", null, ex);
+                await _log.WriteWarningAsync(ComponentName, context, JsonConvert.SerializeObject(new
+                {
+                    url,
+                    reuqest = serializeObject
+                }), ex);
             }
         }
     }
