@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.Loader;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,6 +39,9 @@ namespace Lykke.Job.Pay.StatusBroadcast
                     .UseStartup<Startup>()
                     .UseApplicationInsights()
                     .Build();
+
+                var version = typeof(Program).GetTypeInfo().Assembly.GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+                Console.WriteLine($"Build Version {version}");
 
                 triggerHost = new TriggerHost(webHost.Services);
 
